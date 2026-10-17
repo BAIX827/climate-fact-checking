@@ -1,0 +1,14 @@
+services:
+  factcheck:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      EVIDENCE_PATH: /srv/data/evidence.json   # falls back to the demo sample if absent
+      INDEX_DIR: /srv/index_cache
+      MODEL_DIR: /srv/models
+    volumes:
+      - ./data:/srv/data:ro
+      - ./models:/srv/models:ro
+      - index_cache:/srv/index_cache
+volumes:
+  index_cache:

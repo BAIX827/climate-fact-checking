@@ -1,0 +1,11 @@
+numpy
+unidecode
+tqdm
+bm25s
+PyStemmer
+spacy
+torch
+transformers
+scikit-learn
+matplotlib
+seaborn

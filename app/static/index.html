@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Climate Fact-Checking</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:760px;margin:40px auto;padding:0 16px;color:#222}
+  textarea{width:100%;height:70px;font:inherit;padding:8px;box-sizing:border-box}
+  button{margin-top:8px;padding:8px 18px;font:inherit;cursor:pointer}
+  .label{display:inline-block;padding:4px 10px;border-radius:4px;color:#fff;font-weight:600}
+  .SUPPORTS{background:#2e7d32}.REFUTES{background:#c62828}.NOT_ENOUGH_INFO{background:#757575}.DISPUTED{background:#ef6c00}
+  li{margin:10px 0}.score{color:#888;font-size:.85em}
+</style>
+</head>
+<body>
+<h1>Climate Fact-Checking</h1>
+<textarea id="claim" placeholder="e.g. Global sea levels are rising."></textarea>
+<button id="go">Verify</button>
+<div id="out"></div>
+<script>
+const out = document.getElementById("out");
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+document.getElementById("go").onclick = async () => {
+  out.textContent = "Checking…";
+  const res = await fetch("/verify", {method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({claim: document.getElementById("claim").value})});
+  const r = await res.json();
+  if (!res.ok) { out.textContent = JSON.stringify(r.detail); return; }
+  out.innerHTML = `<p>Prediction: <span class="label ${r.label}">${r.label}</span></p><ol>` +
+    r.evidence.map(e => `<li>${esc(e.text)} <span class="score">${e.id} · ${e.score}</span></li>`).join("") + "</ol>";
+};
+</script>
+</body>
+</html>

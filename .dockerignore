@@ -1,0 +1,6 @@
+*
+!requirements-service.txt
+!src/
+!app/
+!data/sample_evidence.json
+**/__pycache__
